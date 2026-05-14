@@ -93,7 +93,7 @@ export function Navbar() {
       </nav>
       {isMobileMenuOpen && (
         <div className="bg-background/95 border-border border-b backdrop-blur-xl md:hidden">
-          <div className="flex flex-col gap-4 py-4">
+          <div className="flex flex-col gap-4 px-4 py-4">
             <Link
               href="#features"
               className="text-muted-foreground hover:text-foreground transition-colors"

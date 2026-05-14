@@ -12,7 +12,7 @@ import StripeDistortionBackground from '@/components/StripeDistortionBackground'
 
 export default function Home() {
   return (
-    <main className="bg-background relative mx-auto min-h-screen max-w-300 border-x px-2">
+    <main className="bg-background relative mx-auto min-h-screen max-w-300 border-x px-2 md:px-0">
       <Navbar />
       <Hero />
       <LogoStrip />
