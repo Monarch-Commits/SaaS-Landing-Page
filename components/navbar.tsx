@@ -1,67 +1,80 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/50"
-          : "bg-transparent"
+          ? 'bg-background/80 border-border/50 border-b backdrop-blur-xl'
+          : 'bg-transparent'
       }`}
     >
-      <nav className="w-full max-w-300 mx-auto  px-2 h-16 flex items-center justify-between">
+      <nav className="mx-auto flex h-16 w-full max-w-300 items-center justify-between px-2">
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">F</span>
-            </div>
-            <span className="font-semibold text-lg text-foreground">FlowAI</span>
+            <Image
+              src="/FlowAI.svg"
+              alt="FlowAI Logo"
+              width={32}
+              height={32}
+              className="rounded-lg"
+              priority
+            />
+
+            <span className="text-foreground text-lg font-semibold">
+              FlowAI
+            </span>
           </Link>
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden items-center gap-8 md:flex">
             <Link
               href="#features"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
               Product
             </Link>
             <Link
               href="#product"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
               Solutions
             </Link>
             <Link
               href="#pricing"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
               Pricing
             </Link>
             <Link
               href="#faq"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
               Docs
             </Link>
           </div>
         </div>
-        <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+        <div className="hidden items-center gap-4 md:flex">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground"
+          >
             Sign in
           </Button>
           <Button
@@ -72,15 +85,15 @@ export function Navbar() {
           </Button>
         </div>
         <button
-          className="md:hidden text-foreground"
+          className="text-foreground md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </nav>
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border">
-          <div className=" py-4 flex flex-col gap-4">
+        <div className="bg-background/95 border-border border-b backdrop-blur-xl md:hidden">
+          <div className="flex flex-col gap-4 py-4">
             <Link
               href="#features"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -109,8 +122,11 @@ export function Navbar() {
             >
               Docs
             </Link>
-            <div className="flex flex-col gap-2 pt-4 border-t border-border">
-              <Button variant="ghost" className="justify-start text-muted-foreground">
+            <div className="border-border flex flex-col gap-2 border-t pt-4">
+              <Button
+                variant="ghost"
+                className="text-muted-foreground justify-start"
+              >
                 Sign in
               </Button>
               <Button className="bg-foreground text-background hover:bg-foreground/90">
@@ -121,5 +137,5 @@ export function Navbar() {
         </div>
       )}
     </header>
-  )
+  );
 }

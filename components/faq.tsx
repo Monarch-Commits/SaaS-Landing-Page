@@ -33,7 +33,7 @@ export function FAQ() {
     <section id="faq" className="relative py-24 md:py-32">
       <div className="mx-auto max-w-3xl px-6">
         <div className="mb-16 text-center">
-          <span className="bg-primary/10 text-primary mb-4 inline-block px-4 py-1.5 text-sm font-medium">
+          <span className="bg-primary/10 text-primary mb-4 inline-block rounded-full px-4 py-1.5 text-sm font-medium">
             FAQ
           </span>
           <h2 className="mb-4 text-3xl font-bold text-balance md:text-4xl lg:text-5xl">

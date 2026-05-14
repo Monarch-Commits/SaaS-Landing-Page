@@ -1,22 +1,28 @@
+import Image from 'next/image';
+
 const testimonials = [
   {
+    id: 1,
     quote:
-      "FlowAI has completely transformed how our team handles workflows. We've reduced manual tasks by 80% in just two months.",
+      'FlowAI has completely transformed how our team handles workflows...',
     name: 'Sarah Chen',
+    avatar: 'https://api.dicebear.com/7.x/lorelei/svg?seed=EmmaL_Watson_88',
     title: 'Founder & CEO',
     company: 'TechFlow',
   },
   {
-    quote:
-      "The AI-powered automation is incredibly intuitive. It's like having an extra team member that never sleeps.",
+    id: 2,
+    quote: 'The AI-powered automation is incredibly intuitive...',
     name: 'Marcus Rodriguez',
+    avatar: 'https://api.dicebear.com/7.x/lorelei/svg?seed=MarcusRodriguez',
     title: 'CTO',
     company: 'Prism Labs',
   },
   {
-    quote:
-      "Best investment we've made for our productivity. The analytics alone have helped us optimize our entire process.",
+    id: 3,
+    quote: "Best investment we've made for our productivity...",
     name: 'Emily Watson',
+    avatar: 'https://api.dicebear.com/7.x/lorelei/svg?seed=MRodriguez_X9',
     title: 'Product Designer',
     company: 'NovaAI',
   },
@@ -38,10 +44,10 @@ export function Testimonials() {
           </p>
         </div>
 
-        <div className="grid gap-6 border-y px-4 md:grid-cols-3">
+        <div className="grid gap-6 border-y p-2 px-4 md:grid-cols-3">
           {testimonials.map((testimonial) => (
             <div
-              key={testimonial.name}
+              key={testimonial.id}
               className="bg-card/40 hover:border-border border p-6 transition-all duration-300"
             >
               <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -50,7 +56,15 @@ export function Testimonials() {
                 {'"'}
               </p>
               <div className="flex items-center gap-4">
-                <div className="from-primary/30 to-accent/30 h-12 w-12 rounded-full bg-gradient-to-br" />
+                <div className="bg-primary/20 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full">
+                  <Image
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
                 <div>
                   <p className="text-foreground font-medium">
                     {testimonial.name}

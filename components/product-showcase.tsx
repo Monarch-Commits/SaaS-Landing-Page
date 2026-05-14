@@ -1,41 +1,25 @@
 'use client';
 
+import React from 'react';
 import {
-  Activity,
-  BarChart3,
-  Bell,
   LayoutDashboard,
   MessageSquare,
+  Bell,
   Settings,
-  Sparkles,
-  TrendingUp,
   Users,
+  BarChart3,
+  TrendingUp,
+  Activity,
+  Sparkles,
 } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
+import Chart from './Chart/Chart';
+import Image from 'next/image';
 
 const sidebarItems = [
-  {
-    icon: LayoutDashboard,
-    label: 'Dashboard',
-    active: true,
-  },
-  {
-    icon: BarChart3,
-    label: 'Analytics',
-  },
-  {
-    icon: Users,
-    label: 'Team',
-  },
-  {
-    icon: MessageSquare,
-    label: 'Messages',
-  },
-  {
-    icon: Settings,
-    label: 'Settings',
-  },
+  { icon: BarChart3, label: 'Analytics' },
+  { icon: Users, label: 'Team' },
+  { icon: MessageSquare, label: 'Messages' },
+  { icon: Settings, label: 'Settings' },
 ];
 
 const stats = [
@@ -52,311 +36,200 @@ const stats = [
     icon: TrendingUp,
   },
   {
-    label: 'Team Members',
+    label: 'Team',
     value: '48',
     change: '+3',
     icon: Users,
   },
 ];
 
-const chartData = [
-  { day: 'Mon', value: 40 },
-  { day: 'Tue', value: 65 },
-  { day: 'Wed', value: 45 },
-  { day: 'Thu', value: 80 },
-  { day: 'Fri', value: 55 },
-  { day: 'Sat', value: 90 },
-  { day: 'Sun', value: 75 },
-];
-
 const activities = [
   {
+    id: 1,
     user: 'Sarah K.',
-    action: 'completed task',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=DanielKim',
+    action: 'completed a task',
     time: '2m ago',
   },
   {
+    id: 2,
     user: 'Mike R.',
-    action: 'started workflow',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=OliviaMartinez',
+    action: 'started a workflow',
     time: '15m ago',
   },
   {
+    id: 3,
     user: 'Emma L.',
-    action: 'added comment',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=JamesWilson',
+    action: 'added a comment',
     time: '1h ago',
   },
 ];
 
-export function ProductShowcase() {
+function ProductShowcaseComponent() {
   return (
-    <section
-      id="product"
-      aria-labelledby="product-heading"
-      className="relative overflow-hidden py-24 md:py-32"
-    >
-      {/* Background */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.12),_transparent_45%)]" />
+    <section id="product" className="relative overflow-hidden py-24 md:py-32">
+      <div className="absolute inset-0" />
 
-      <div className="mx-auto max-w-7xl px-6">
-        {/* Header */}
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <div className="border-primary/20 bg-primary/10 text-primary mb-5 inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+        {/* HEADER */}
+        <div className="mb-16 text-center">
+          <span className="bg-accent/10 text-accent mb-4 inline-block rounded-full px-4 py-1.5 text-sm font-medium">
             Product
-          </div>
+          </span>
 
-          <h2
-            id="product-heading"
-            className="text-foreground text-4xl font-bold tracking-tight md:text-5xl"
-          >
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl lg:text-5xl">
             Built for the way you work
           </h2>
 
-          <p className="text-muted-foreground mt-5 text-lg leading-relaxed">
-            A powerful AI dashboard designed to streamline workflows,
-            collaborate with teams, and automate repetitive tasks.
+          <p className="text-muted-foreground mx-auto max-w-2xl text-base sm:text-lg">
+            A powerful dashboard designed to give you complete control over your
+            workflows.
           </p>
         </div>
 
-        {/* Dashboard */}
+        {/* DASHBOARD */}
         <div className="relative">
-          {/* Glow */}
-          <div className="from-primary/20 to-primary/20 absolute inset-0 rounded-[2rem] bg-gradient-to-r via-violet-500/10 blur-3xl" />
+          <div className="from-primary/20 via-accent/20 to-primary/20 absolute -inset-4 rounded-3xl" />
 
-          <div className="border-border/60 bg-background/70 relative overflow-hidden rounded-[2rem] border shadow-2xl backdrop-blur-xl">
-            {/* Top Bar */}
-            <div className="border-border/60 flex items-center justify-between border-b px-6 py-4">
-              <div className="flex items-center gap-5">
-                {/* Mac dots */}
-                <div className="flex items-center gap-2">
+          <div className="border-border bg-background/60 relative overflow-hidden rounded-2xl border backdrop-blur-xl">
+            {/* TOP BAR */}
+            <div className="border-border flex flex-col gap-3 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+              <div className="flex items-center gap-4">
+                <div className="flex gap-1.5">
                   <div className="h-3 w-3 rounded-full bg-red-400" />
                   <div className="h-3 w-3 rounded-full bg-yellow-400" />
                   <div className="h-3 w-3 rounded-full bg-green-400" />
                 </div>
-
-                <div className="hidden sm:block">
-                  <p className="text-foreground text-sm font-medium">
-                    FlowAI Dashboard
-                  </p>
-                  <p className="text-muted-foreground text-xs">
-                    Manage your workflows efficiently
-                  </p>
-                </div>
+                <span className="text-muted-foreground text-xs sm:text-sm">
+                  FlowAI Dashboard
+                </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  aria-label="Notifications"
-                  className="border-border/50 bg-muted/40 hover:bg-muted flex h-10 w-10 items-center justify-center rounded-xl border transition-colors"
-                >
-                  <Bell className="text-muted-foreground h-4 w-4" />
-                </button>
-
-                <button
-                  type="button"
-                  aria-label="Settings"
-                  className="border-border/50 bg-muted/40 hover:bg-muted flex h-10 w-10 items-center justify-center rounded-xl border transition-colors"
-                >
-                  <Settings className="text-muted-foreground h-4 w-4" />
-                </button>
-
-                <div className="from-primary h-10 w-10 rounded-xl bg-gradient-to-br to-violet-500" />
+                <Bell className="text-muted-foreground h-4 w-4" />
+                <Settings className="text-muted-foreground h-4 w-4" />
+                <div className="bg-primary/30 h-7 w-7 rounded-full" />
               </div>
             </div>
 
-            <div className="flex">
-              {/* Sidebar */}
-              <aside className="border-border/60 bg-muted/20 hidden w-64 border-r p-4 lg:block">
-                <nav className="space-y-1">
-                  {sidebarItems.map((item) => {
-                    const Icon = item.icon;
-
-                    return (
-                      <button
-                        key={item.label}
-                        className={cn(
-                          'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
-                          item.active
-                            ? 'bg-primary text-primary-foreground shadow-primary/20 shadow-lg'
-                            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
-                        )}
-                      >
-                        <Icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                {/* Sidebar Card */}
-                <div className="border-primary/20 from-primary/15 mt-8 rounded-2xl border bg-gradient-to-br to-violet-500/10 p-5">
-                  <div className="bg-primary/20 mb-4 flex h-11 w-11 items-center justify-center rounded-xl">
-                    <Sparkles className="text-primary h-5 w-5" />
-                  </div>
-
-                  <h3 className="text-foreground font-semibold">
-                    AI Automation
-                  </h3>
-
-                  <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                    Save hours every week with intelligent workflow automation.
-                  </p>
+            {/* LAYOUT */}
+            <div className="flex flex-col lg:flex-row">
+              {/* SIDEBAR */}
+              <div className="border-border bg-muted/20 hidden w-56 flex-col border-r p-4 lg:flex">
+                <div className="bg-primary/10 text-primary mb-1 flex items-center gap-3 rounded-lg px-3 py-2">
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span className="text-sm font-medium">Dashboard</span>
                 </div>
-              </aside>
 
-              {/* Main Content */}
-              <div className="flex-1 p-6 lg:p-8">
-                <div className="grid gap-6 xl:grid-cols-3">
-                  {/* Left */}
-                  <div className="space-y-6 xl:col-span-2">
-                    {/* Stats */}
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      {stats.map((stat) => {
-                        const Icon = stat.icon;
+                {sidebarItems.map((item) => (
+                  <div
+                    key={item.label}
+                    className="text-muted-foreground hover:text-foreground flex items-center gap-3 px-3 py-2 text-sm transition"
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                  </div>
+                ))}
+              </div>
 
-                        return (
-                          <div
-                            key={stat.label}
-                            className="border-border/50 bg-muted/20 rounded-2xl border p-5 backdrop-blur-sm"
-                          >
-                            <div className="mb-4 flex items-center justify-between">
-                              <p className="text-muted-foreground text-sm">
-                                {stat.label}
-                              </p>
-
-                              <div className="bg-primary/10 flex h-9 w-9 items-center justify-center rounded-xl">
-                                <Icon className="text-primary h-4 w-4" />
-                              </div>
-                            </div>
-
-                            <div className="flex items-end gap-2">
-                              <h3 className="text-3xl font-bold tracking-tight">
-                                {stat.value}
-                              </h3>
-
-                              <span className="mb-1 text-xs font-medium text-green-500">
-                                {stat.change}
-                              </span>
-                            </div>
+              {/* MAIN */}
+              <div className="flex-1 p-4 sm:p-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                  {/* LEFT */}
+                  <div className="w-full space-y-6 lg:col-span-2">
+                    {/* STATS */}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                      {stats.map((stat) => (
+                        <div
+                          key={stat.label}
+                          className="border-border bg-muted/30 rounded-xl border p-4"
+                        >
+                          <div className="mb-2 flex items-center justify-between">
+                            <span className="text-muted-foreground text-xs">
+                              {stat.label}
+                            </span>
+                            <stat.icon className="text-muted-foreground h-4 w-4" />
                           </div>
-                        );
-                      })}
+
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-xl font-bold sm:text-2xl">
+                              {stat.value}
+                            </span>
+                            <span className="text-xs text-green-500">
+                              {stat.change}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
 
-                    {/* Chart */}
-                    <div className="border-border/50 bg-muted/20 rounded-2xl border p-6">
-                      <div className="mb-8 flex items-center justify-between">
-                        <div>
-                          <h3 className="text-foreground font-semibold">
-                            Workflow Performance
-                          </h3>
+                    <Chart />
+                  </div>
 
-                          <p className="text-muted-foreground text-sm">
-                            Last 7 days activity
-                          </p>
+                  {/* RIGHT */}
+                  <div className="w-full space-y-6">
+                    {/* AI PANEL */}
+                    <div className="border-border from-primary/10 to-accent/10 rounded-xl border bg-gradient-to-br p-4">
+                      <div className="mb-4 flex items-center gap-3">
+                        <div className="bg-primary/20 flex h-10 w-10 items-center justify-center rounded-xl">
+                          <Image
+                            src="/AIAssistant.svg"
+                            alt="AI Assistant Avatar"
+                            width={32}
+                            height={32}
+                            className="h-5 w-5 rounded-lg"
+                            priority
+                          />
                         </div>
-
-                        <div className="border-border/50 bg-background/60 text-muted-foreground rounded-full border px-3 py-1 text-xs">
-                          +24.8%
+                        <div>
+                          <p className="text-sm font-medium">AI Assistant</p>
+                          <p className="text-muted-foreground text-xs">
+                            Always ready
+                          </p>
                         </div>
                       </div>
 
-                      <div className="flex h-64 items-end gap-3">
-                        {chartData.map((item) => (
+                      <div className="bg-background/50 text-muted-foreground rounded-lg p-3 text-sm">
+                        I've analyzed your workflows. Here are 3 suggestions...
+                      </div>
+                    </div>
+
+                    {/* ACTIVITY */}
+                    <div className="border-border bg-muted/30 rounded-xl border p-4">
+                      <h3 className="mb-4 text-sm font-medium">
+                        Recent Activity
+                      </h3>
+
+                      <div className="space-y-3">
+                        {activities.map((a) => (
                           <div
-                            key={item.day}
-                            className="flex flex-1 flex-col items-center gap-3"
+                            key={a.id || a.user}
+                            className="flex items-center gap-3"
                           >
-                            <div className="relative flex h-full w-full items-end">
-                              <div
-                                className="from-primary/50 to-primary hover:from-primary w-full rounded-t-2xl bg-gradient-to-t transition-all duration-300 hover:to-violet-500"
-                                style={{
-                                  height: `${item.value}%`,
-                                }}
+                            {/* Avatar wrapper */}
+                            <div className="bg-primary/20 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full">
+                              <Image
+                                src={a.avatar}
+                                alt={a.user}
+                                width={32}
+                                height={32}
+                                className="h-full w-full object-cover"
                               />
                             </div>
 
-                            <span className="text-muted-foreground text-xs">
-                              {item.day}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Panel */}
-                  <div className="space-y-6">
-                    {/* AI Card */}
-                    <div className="border-primary/20 from-primary/15 overflow-hidden rounded-2xl border bg-gradient-to-br to-violet-500/10 p-5">
-                      <div className="mb-5 flex items-center gap-4">
-                        <div className="bg-primary/20 flex h-12 w-12 items-center justify-center rounded-2xl">
-                          <Sparkles className="text-primary h-5 w-5" />
-                        </div>
-
-                        <div>
-                          <h3 className="text-foreground font-semibold">
-                            AI Assistant
-                          </h3>
-
-                          <p className="text-muted-foreground text-sm">
-                            Smart workflow insights
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="border-border/40 bg-background/60 text-muted-foreground rounded-2xl border p-4 text-sm leading-relaxed">
-                          I analyzed your workflows and found 3 automation
-                          opportunities that can save your team 12+ hours
-                          weekly.
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="border-border/50 bg-background/40 h-11 flex-1 rounded-xl border" />
-
-                          <button
-                            type="button"
-                            className="bg-primary text-primary-foreground flex h-11 w-11 items-center justify-center rounded-xl transition-transform hover:scale-105"
-                          >
-                            <Sparkles className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Activity Feed */}
-                    <div className="border-border/50 bg-muted/20 rounded-2xl border p-5">
-                      <div className="mb-5 flex items-center justify-between">
-                        <h3 className="text-foreground font-semibold">
-                          Recent Activity
-                        </h3>
-
-                        <span className="text-muted-foreground text-xs">
-                          Live updates
-                        </span>
-                      </div>
-
-                      <div className="space-y-4">
-                        {activities.map((activity) => (
-                          <div
-                            key={`${activity.user}-${activity.time}`}
-                            className="flex items-start gap-3"
-                          >
-                            <div className="from-primary/30 h-10 w-10 rounded-full bg-gradient-to-br to-violet-500/30" />
-
-                            <div className="min-w-0 flex-1">
-                              <p className="text-foreground text-sm leading-relaxed">
-                                <span className="font-medium">
-                                  {activity.user}
-                                </span>{' '}
+                            {/* Text content */}
+                            <div className="leading-tight">
+                              <p className="text-sm">
+                                <span className="font-medium">{a.user}</span>{' '}
                                 <span className="text-muted-foreground">
-                                  {activity.action}
+                                  {a.action}
                                 </span>
                               </p>
 
-                              <p className="text-muted-foreground mt-1 text-xs">
-                                {activity.time}
+                              <p className="text-muted-foreground text-xs">
+                                {a.time}
                               </p>
                             </div>
                           </div>
@@ -373,3 +246,5 @@ export function ProductShowcase() {
     </section>
   );
 }
+
+export const ProductShowcase = React.memo(ProductShowcaseComponent);
