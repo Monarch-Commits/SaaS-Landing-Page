@@ -8,7 +8,6 @@ import { Testimonials } from '@/components/testimonials';
 import { FAQ } from '@/components/faq';
 import { FinalCTA } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
-import StripeDistortionBackground from '@/components/StripeDistortionBackground';
 
 export default function Home() {
   return (
@@ -18,7 +17,6 @@ export default function Home() {
       <LogoStrip />
       <Features />
       <ProductShowcase />
-      {/* <StripeDistortionBackground /> */}
       <Pricing />
       <Testimonials />
       <FAQ />
