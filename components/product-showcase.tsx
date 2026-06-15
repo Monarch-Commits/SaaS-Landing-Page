@@ -12,7 +12,7 @@ import {
   Activity,
   Sparkles,
 } from 'lucide-react';
-import Chart from './Chart/Chart';
+import Chart from './Chart/ChartComponent';
 import Image from 'next/image';
 
 const sidebarItems = [

@@ -5,6 +5,17 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import {
+  LoginLink,
+  RegisterLink,
+} from '@kinde-oss/kinde-auth-nextjs/components';
+
+const navLinks = [
+  { name: 'Product', href: '#features' },
+  { name: 'Solutions', href: '#product' },
+  { name: 'Pricing', href: '#pricing' },
+  { name: 'Docs', href: '#faq' },
+];
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,46 +54,30 @@ export function Navbar() {
             </span>
           </Link>
           <div className="hidden items-center gap-8 md:flex">
-            <Link
-              href="#features"
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              Product
-            </Link>
-            <Link
-              href="#product"
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              Solutions
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="#faq"
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              Docs
-            </Link>
+            {navLinks.map((link, i) => (
+              <Link
+                key={i}
+                href={link.href}
+                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
           </div>
         </div>
         <div className="hidden items-center gap-4 md:flex">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-muted-foreground hover:text-foreground"
-          >
+          <LoginLink className="text-muted-foreground hover:text-foreground text-sm transition-colors">
             Sign in
-          </Button>
-          <Button
-            size="sm"
-            className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-4"
-          >
-            Get Started
-          </Button>
+          </LoginLink>
+
+          <RegisterLink>
+            <Button
+              size="sm"
+              className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-4"
+            >
+              Get Started
+            </Button>
+          </RegisterLink>
         </div>
         <button
           className="text-foreground md:hidden"
@@ -123,15 +118,20 @@ export function Navbar() {
               Docs
             </Link>
             <div className="border-border flex flex-col gap-2 border-t pt-4">
-              <Button
-                variant="ghost"
-                className="text-muted-foreground justify-start"
+              <LoginLink
+                className="text-muted-foreground hover:text-foreground text-left transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Sign in
-              </Button>
-              <Button className="bg-foreground text-background hover:bg-foreground/90">
-                Get Started
-              </Button>
+              </LoginLink>
+              <RegisterLink>
+                <Button
+                  size="sm"
+                  className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-4"
+                >
+                  Get Started
+                </Button>
+              </RegisterLink>
             </div>
           </div>
         </div>
