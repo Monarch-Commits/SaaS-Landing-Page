@@ -1,5 +1,6 @@
 import { updateProfile } from '@/app/actions/members/update-profile';
 import { requireUser } from '@/app/actions/user';
+import { SubmitButton } from '@/components/dashboard/button/profileButton';
 import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
 
@@ -48,12 +49,7 @@ export default async function ProfilePage() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-black py-2 text-white"
-          >
-            Save Profile
-          </button>
+          <SubmitButton />
         </form>
       </div>
     </div>
