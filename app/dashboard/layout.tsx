@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
 import { getCurrentUser, syncUser, updateLastLogin } from '../actions/user';
-
+export const dynamic = 'force-dynamic';
 export default async function DashboardLayout({
   children,
 }: {
