@@ -2,6 +2,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
 import { getCurrentUser, syncUser } from '../actions/user';
 import { checkFirstLogin } from '../actions/owner/company';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,9 @@ export default async function DashboardLayout({
 
   // 3. Fetch full user for sidebar
   const user = await getCurrentUser();
+  if (user?.status === 'PENDING') {
+    redirect('/pending-approval');
+  }
 
   return (
     <SidebarProvider>
