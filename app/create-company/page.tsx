@@ -1,4 +1,4 @@
-import { createCompany } from '../actions/company';
+import { createCompany } from '../actions/owner/company';
 
 export default function CreateCompanyPage() {
   return (

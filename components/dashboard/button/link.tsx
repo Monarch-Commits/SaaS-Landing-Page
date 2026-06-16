@@ -1,19 +1,32 @@
-import { createInvite } from '@/app/actions/members/create-invite';
+'use client';
 
-export default function ButtonLink({ companyId }: { companyId: string }) {
-  const handleGenerate = async () => {
-    const link = await createInvite(companyId);
+import { createInvite } from '@/app/actions/owner/create-invite';
+import { useFormStatus } from 'react-dom';
 
-    await navigator.clipboard.writeText(link);
+function SubmitButton() {
+  const { pending } = useFormStatus();
 
-    alert('Invite link copied!');
-  };
   return (
     <button
-      onClick={handleGenerate}
+      type="submit"
+      disabled={pending}
       className="bg-muted/50 hover:bg-muted block w-full rounded-lg py-2.5 text-center text-sm"
     >
-      Generate Invite Link
+      {pending ? 'Generating...' : 'Generate Invite Link'}
     </button>
+  );
+}
+
+export default function ButtonLink({ companyId }: { companyId: string }) {
+  return (
+    <form
+      action={async () => {
+        const link = await createInvite(companyId);
+        await navigator.clipboard.writeText(link);
+        alert('Invite link copied!');
+      }}
+    >
+      <SubmitButton />
+    </form>
   );
 }

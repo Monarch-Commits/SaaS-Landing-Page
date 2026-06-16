@@ -12,8 +12,7 @@ export async function createInvite(companyId: string) {
       token: randomUUID(),
       companyId,
       createdById: user.id,
-      email: user.email,
-      // email: optional lang kung gusto mo restrict later
+      email: user.email, // email: optional lang kung gusto mo restrict later
     },
   });
 

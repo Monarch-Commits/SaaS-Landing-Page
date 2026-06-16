@@ -1,14 +1,9 @@
-import { NextResponse } from 'next/server';
+import { withAuth } from '@kinde-oss/kinde-auth-nextjs/middleware';
 
-export function middleware(req: any) {
-  const pathname = req.nextUrl.pathname;
+export default withAuth({
+  isReturnToCurrentPage: true,
+});
 
-  // example simple protection
-  const role = req.cookies.get('role')?.value;
-
-  if (pathname.startsWith('/dashboard/owner') && role !== 'OWNER') {
-    return NextResponse.redirect(new URL('/403', req.url));
-  }
-
-  return NextResponse.next();
-}
+export const config = {
+  matcher: ['/dashboard/:path*', '/onboarding', '/pending-approval'],
+};

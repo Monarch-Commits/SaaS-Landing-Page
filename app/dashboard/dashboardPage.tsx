@@ -72,7 +72,7 @@ function ManagerDashboardComponent({ companyName }: Props) {
           <div className="flex items-center gap-2">
             <SidebarTrigger />
             <span className="text-muted-foreground hidden text-sm font-medium sm:block">
-              {companyName?.name}
+              {/* {companyName?.name} */}
             </span>
           </div>
 

@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import {
   LoginLink,
   RegisterLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
+import { InviteStatus } from '@prisma/client';
 
 export default async function InvitePage({
   params,
@@ -13,21 +13,23 @@ export default async function InvitePage({
   const { token } = await params;
 
   const invite = await prisma.invite.findUnique({
-    where: {
-      token,
-    },
-    include: {
-      company: true,
-    },
+    where: { token },
+    include: { company: true },
   });
 
-  if (!invite) {
+  // Check if token doesn't exist, is already used, or is expired
+  const isExpired = invite?.expiresAt && invite.expiresAt < new Date();
+  const isInvalid =
+    !invite || invite.status !== InviteStatus.PENDING || isExpired;
+
+  if (isInvalid) {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center">
         <div className="border-border bg-card w-full max-w-md rounded-3xl border p-8 text-center shadow-sm">
           <h1 className="text-2xl font-bold">Invalid Invite</h1>
           <p className="text-muted-foreground mt-2">
-            This invitation link is invalid or has expired.
+            This invitation link is invalid, has expired, or has already been
+            used.
           </p>
         </div>
       </div>
@@ -53,26 +55,18 @@ export default async function InvitePage({
 
         <div className="space-y-3">
           <RegisterLink
-            postLoginRedirectURL={`/dashboard/profile?token=${token}`}
+            postLoginRedirectURL={`/onboarding?token=${token}`}
             className="bg-primary text-primary-foreground hover:bg-primary/90 flex h-11 w-full items-center justify-center rounded-xl font-medium transition"
           >
             Create Account
           </RegisterLink>
 
           <LoginLink
-            postLoginRedirectURL={`/dashboard/profile?token=${token}`}
+            postLoginRedirectURL={`/onboarding?token=${token}`}
             className="border-border hover:bg-muted flex h-11 w-full items-center justify-center rounded-xl border font-medium transition"
           >
             I Already Have an Account
           </LoginLink>
-        </div>
-
-        <div className="text-muted-foreground mt-6 text-center text-sm">
-          By continuing, you'll request access to{' '}
-          <span className="text-foreground font-medium">
-            {invite.company.name}
-          </span>
-          .
         </div>
       </div>
     </div>

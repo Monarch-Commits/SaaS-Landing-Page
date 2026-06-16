@@ -10,47 +10,31 @@ export async function syncUser() {
 
   if (!user?.email) return null;
 
-  let dbUser = await prisma.user.findUnique({
-    where: {
+  const name =
+    [user.given_name, user.family_name].filter(Boolean).join(' ') || user.email;
+
+  const image = user.picture ?? null;
+
+  const dbUser = await prisma.user.upsert({
+    where: { email: user.email },
+    create: {
       email: user.email,
+      name,
+      image,
+      role: Role.EMPLOYEE,
+      status: UserStatus.PENDING,
+      lastLoginAt: new Date(),
+    },
+    update: {
+      name,
+      image,
+      lastLoginAt: new Date(),
     },
   });
-
-  // CREATE USER (first login)
-  if (!dbUser) {
-    dbUser = await prisma.user.create({
-      data: {
-        email: user.email,
-        name:
-          user.given_name && user.family_name
-            ? `${user.given_name} ${user.family_name}`
-            : (user.given_name ?? ''),
-        image: user.picture ?? '',
-
-        role: Role.EMPLOYEE,
-        status: UserStatus.PENDING,
-
-        lastLoginAt: new Date(),
-      },
-    });
-  } else {
-    // UPDATE LOGIN TIME ONLY
-    dbUser = await prisma.user.update({
-      where: {
-        email: user.email,
-      },
-      data: {
-        lastLoginAt: new Date(),
-      },
-    });
-  }
 
   return dbUser;
 }
 
-/**
- * Get current logged-in user with relations
- */
 export async function getCurrentUser() {
   const { getUser } = getKindeServerSession();
   const authUser = await getUser();
@@ -58,13 +42,12 @@ export async function getCurrentUser() {
   if (!authUser?.email) return null;
 
   return prisma.user.findUnique({
-    where: {
-      email: authUser.email,
-    },
+    where: { email: authUser.email },
     select: {
       id: true,
       email: true,
       name: true,
+      image: true,
       role: true,
       status: true,
       companyId: true,
@@ -74,38 +57,17 @@ export async function getCurrentUser() {
   });
 }
 
-/**
- * Update last login timestamp
- */
-export async function updateLastLogin(email: string) {
-  if (!email) return;
-
-  await prisma.user.update({
-    where: { email },
-    data: {
-      lastLoginAt: new Date(),
-    },
-  });
-}
-
-/**
- * Protect server actions / APIs
- */
 export async function requireUser() {
   const { getUser } = getKindeServerSession();
-  const user = await getUser();
+  const kindeUser = await getUser();
 
-  if (!user?.email) {
+  if (!kindeUser?.email) {
     throw new Error('Unauthorized');
   }
 
   const dbUser = await prisma.user.findUnique({
-    where: {
-      email: user.email,
-    },
-    include: {
-      company: true,
-    },
+    where: { email: kindeUser.email },
+    include: { company: true },
   });
 
   if (!dbUser) {

@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/app/actions/user';
+import { redirect } from 'next/navigation';
 
 export async function getPendingMembers() {
   const user = await requireUser();
@@ -25,4 +26,18 @@ export async function getPendingMembers() {
   });
 
   return members;
+}
+
+export async function checkAccessToDashboard() {
+  const user = await requireUser();
+
+  if (user.status === 'PENDING') {
+    redirect('/pending-approval');
+  }
+
+  if (!user.companyId) {
+    redirect('/create-company');
+  }
+
+  return user;
 }
