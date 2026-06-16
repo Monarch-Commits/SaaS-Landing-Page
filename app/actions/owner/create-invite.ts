@@ -7,12 +7,16 @@ import { requireUser } from '../user';
 export async function createInvite(companyId: string) {
   const user = await requireUser();
 
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 7);
+
   const invite = await prisma.invite.create({
     data: {
       token: randomUUID(),
       companyId,
       createdById: user.id,
-      email: user.email, // email: optional lang kung gusto mo restrict later
+      email: user.email,
+      expiresAt,
     },
   });
 

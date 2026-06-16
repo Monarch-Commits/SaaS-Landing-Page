@@ -1,8 +1,8 @@
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
-import { getCurrentUser, syncUser } from '../actions/user';
 import { checkFirstLogin } from '../actions/owner/company';
-import { redirect } from 'next/navigation';
+import { checkAccessToDashboard } from '../actions/members/get-pending-members';
+import { syncUser } from '../actions/user';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,19 +11,9 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // 1. Sync Kinde user → DB (name, image, lastLoginAt)
   await syncUser();
-
-  // 2. If user has no company yet, redirect to /create-company.
-  //    Make sure /create-company lives OUTSIDE this layout's route group
-  //    so it doesn't trigger this check and cause an infinite redirect loop.
   await checkFirstLogin();
-
-  // 3. Fetch full user for sidebar
-  const user = await getCurrentUser();
-  if (user?.status === 'PENDING') {
-    redirect('/pending-approval');
-  }
+  const user = await checkAccessToDashboard();
 
   return (
     <SidebarProvider>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { createTask } from '@/app/actions/task';
 
 import {
   Dialog,
@@ -23,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { createTask } from '@/app/actions/task';
 
 export default function CreateTaskDialog() {
   const [open, setOpen] = useState(false);
