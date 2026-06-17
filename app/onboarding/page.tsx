@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState } from 'react';
 import { acceptInvite } from '../actions/members/update-profile';
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -10,22 +10,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   INVITE_EXPIRED: 'This invite link has expired.',
   INVITE_EMAIL_MISMATCH: 'This invite was not sent to your email.',
   USER_ALREADY_HAS_COMPANY: 'You are already part of a company.',
+  SERVER_ERROR: 'Something went wrong. Please try again.',
 };
-
-async function acceptInviteAction(
-  _prev: string | null,
-  formData: FormData,
-): Promise<string | null> {
-  try {
-    await acceptInvite(formData);
-    return null;
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      return ERROR_MESSAGES[err.message] ?? 'Something went wrong. Try again.';
-    }
-    return 'Something went wrong. Try again.';
-  }
-}
 
 export default function OnboardingClient({
   token,
@@ -34,15 +20,11 @@ export default function OnboardingClient({
   token: string;
   companyName: string;
 }) {
-  const [error, formAction, isPending] = useActionState(
-    acceptInviteAction,
-    null,
-  );
+  const [error, formAction, isPending] = useActionState(acceptInvite, null);
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="bg-card w-full max-w-md rounded-3xl border p-8 shadow-lg">
-        {/* Header */}
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold">Welcome to {companyName}</h1>
           <p className="text-muted-foreground mt-2">
@@ -50,52 +32,38 @@ export default function OnboardingClient({
           </p>
         </div>
 
-        {/* Form */}
         <form action={formAction} className="space-y-4">
           <input type="hidden" name="token" value={token} />
 
-          <div className="space-y-1">
-            <label htmlFor="name" className="block text-sm font-medium">
-              Full Name
-            </label>
+          <div>
+            <label className="text-sm font-medium">Full Name</label>
             <input
-              id="name"
               name="name"
-              type="text"
               required
-              autoFocus
+              className="w-full rounded-xl border p-3"
               placeholder="John Doe"
-              className="w-full rounded-xl border p-3 focus:ring-2 focus:ring-black/20 focus:outline-none"
             />
           </div>
 
-          <div className="space-y-1">
-            <label htmlFor="image" className="block text-sm font-medium">
-              Avatar URL{' '}
-              <span className="text-muted-foreground font-normal">
-                (optional)
-              </span>
-            </label>
+          <div>
+            <label className="text-sm font-medium">Avatar URL</label>
             <input
-              id="image"
               name="image"
               type="url"
+              className="w-full rounded-xl border p-3"
               placeholder="https://..."
-              className="w-full rounded-xl border p-3 focus:ring-2 focus:ring-black/20 focus:outline-none"
             />
           </div>
 
-          {/* Error */}
           {error && (
             <p className="rounded-xl border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-400">
-              {error}
+              {ERROR_MESSAGES[error] ?? 'Something went wrong.'}
             </p>
           )}
 
           <button
-            type="submit"
             disabled={isPending}
-            className="w-full rounded-xl bg-black py-3 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
           >
             {isPending ? 'Submitting...' : 'Continue'}
           </button>

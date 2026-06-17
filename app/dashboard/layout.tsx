@@ -1,8 +1,7 @@
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
-import { checkFirstLogin } from '../actions/owner/company';
-
-import { getCurrentUser, syncUser } from '../actions/user';
+import { getCurrentUser, requireUser, syncUser } from '@/lib/auth/user';
+import { checkFirstLogin } from '@/lib/auth/company';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +12,7 @@ export default async function DashboardLayout({
 }) {
   await syncUser();
   await checkFirstLogin();
-  const user = await getCurrentUser();
+  const user = await requireUser();
 
   return (
     <SidebarProvider>

@@ -1,9 +1,9 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { requireUser } from './user';
 import { revalidatePath } from 'next/cache';
 import { TaskPriority, TaskStatus } from '@prisma/client';
+import { requireUser } from '@/lib/auth/user';
 
 export async function createTask(formData: FormData) {
   const user = await requireUser();

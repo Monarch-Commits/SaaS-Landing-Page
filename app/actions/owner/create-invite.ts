@@ -2,45 +2,46 @@
 
 import { prisma } from '@/lib/prisma';
 import { randomUUID } from 'crypto';
-import { requireUser } from '../user';
-import { Role } from '@prisma/client';
+import { Role, InviteStatus } from '@prisma/client';
+import { requireUser } from '@/lib/auth/user';
 
 export async function createInvite(email: string) {
   const user = await requireUser();
 
-  // ✅ Owner at Manager lang pwede mag-invite
+  // 🔐 Only OWNER / MANAGER can invite
   if (user.role !== Role.OWNER && user.role !== Role.MANAGER) {
-    throw new Error('FORBIDDEN — Only Owner or Manager can invite');
+    throw new Error('FORBIDDEN_ONLY_OWNER_OR_MANAGER');
   }
 
-  // ✅ Dapat may company yung nag-iinvite
+  // 🏢 Must belong to a company
   if (!user.companyId) {
     throw new Error('NO_COMPANY_ASSIGNED');
   }
 
-  // ✅ Validate email
-  if (!email?.trim()) {
-    throw new Error('Email is required');
+  // 📧 Validate email
+  const cleanEmail = email?.trim().toLowerCase();
+  if (!cleanEmail) {
+    throw new Error('EMAIL_REQUIRED');
   }
 
-  // ✅ Check if email already a member ng company
+  // 👤 Check if already a member
   const alreadyMember = await prisma.user.findFirst({
     where: {
-      email,
+      email: cleanEmail,
       companyId: user.companyId,
     },
   });
 
   if (alreadyMember) {
-    throw new Error('USER_ALREADY_A_MEMBER');
+    throw new Error('USER_ALREADY_MEMBER');
   }
 
-  // ✅ Check if may existing pending invite pa
+  // 📩 Check existing pending invite
   const existingInvite = await prisma.invite.findFirst({
     where: {
-      email,
+      email: cleanEmail,
       companyId: user.companyId,
-      status: 'PENDING',
+      status: InviteStatus.PENDING,
     },
   });
 
@@ -48,18 +49,25 @@ export async function createInvite(email: string) {
     throw new Error('INVITE_ALREADY_SENT');
   }
 
+  // ⏳ Expiry (7 days)
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
+  // 📦 Create invite
   const invite = await prisma.invite.create({
     data: {
       token: randomUUID(),
-      companyId: user.companyId, // ✅ Galing sa user, hindi sa parameter
+      email: cleanEmail,
+      companyId: user.companyId,
       createdById: user.id,
-      email, // ✅ Email ng iina-invite, hindi ng nag-iinvite
+      role: Role.EMPLOYEE,
+      status: InviteStatus.PENDING,
       expiresAt,
     },
   });
 
-  return `${process.env.NEXT_PUBLIC_APP_URL}/invite/${invite.token}`;
+  // 🌐 Base URL safety
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  return `${baseUrl}/invite/${invite.token}`;
 }

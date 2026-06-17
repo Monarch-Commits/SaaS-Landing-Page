@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Role, UserStatus } from '@prisma/client';
+import { redirect } from 'next/navigation';
 
 export async function syncUser() {
   const { getUser } = getKindeServerSession();
@@ -45,6 +46,7 @@ export async function getCurrentUser() {
 
   return prisma.user.findUnique({
     where: { email: authUser.email },
+
     select: {
       id: true,
       email: true,
@@ -63,11 +65,15 @@ export async function requireUser() {
   const user = await getCurrentUser();
 
   if (!user) {
-    throw new Error('Unauthorized');
+    redirect('/api/auth/login');
   }
 
   if (user.status === UserStatus.SUSPENDED) {
-    throw new Error('Account suspended');
+    redirect('/suspended');
+  }
+
+  if (user.status === UserStatus.PENDING) {
+    redirect('/pending-approval');
   }
 
   return user;

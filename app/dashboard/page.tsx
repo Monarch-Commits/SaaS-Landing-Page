@@ -1,4 +1,4 @@
-import { getUserCompany } from '../actions/owner/company';
+import { getUserCompany } from '@/lib/auth/company';
 import { ManagerDashboard } from './dashboardPage';
 
 export default async function DashboardPage() {

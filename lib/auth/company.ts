@@ -1,9 +1,10 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { requireUser } from '../user';
+
 import { redirect } from 'next/navigation';
 import { Role, UserStatus } from '@prisma/client';
+import { requireUser } from './user';
 
 // ✅ Check if user has a company on first login
 export async function checkFirstLogin() {
