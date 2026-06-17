@@ -90,6 +90,7 @@ function ManagerDashboardComponent({ companyName }: Props) {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
+            <p>{companyName?.name}</p>
             <button
               className="border-border/40 bg-muted/40 hover:bg-muted/60 relative flex h-10 w-10 items-center justify-center rounded-xl border transition"
               aria-label="Notifications"

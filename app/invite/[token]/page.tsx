@@ -1,9 +1,9 @@
+import { requireUser } from '@/app/actions/user';
 import { prisma } from '@/lib/prisma';
 import {
   LoginLink,
   RegisterLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { InviteStatus } from '@prisma/client';
 
 export default async function InvitePage({
@@ -17,9 +17,6 @@ export default async function InvitePage({
     where: { token },
     include: { company: true },
   });
-
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
 
   // Check if token doesn't exist, is already used, or is expired
   const isExpired = invite?.expiresAt && invite.expiresAt < new Date();
@@ -71,7 +68,6 @@ export default async function InvitePage({
           >
             I Already Have an Account
           </LoginLink>
-          <p>{user?.email}</p>
         </div>
       </div>
     </div>

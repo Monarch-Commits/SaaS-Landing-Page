@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { User } from 'lucide-react';
+import Image from 'next/image';
 
 type PendingMember = {
   id: string;
   email: string;
+  image: string | null;
   role: 'OWNER' | 'EMPLOYEE' | 'MANAGER';
   createdAt: Date;
 };
@@ -126,9 +128,16 @@ export default function PendingClient({
             >
               {/* USER */}
               <div className="col-span-5 flex items-center gap-3">
-                <div className="bg-muted flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold">
-                  {getInitials(m.email)}
-                </div>
+                <Image
+                  src={
+                    m.image ||
+                    'https://api.dicebear.com/7.x/adventurer/svg?seed=Emma'
+                  }
+                  alt="user"
+                  width={36}
+                  height={36}
+                  className="shrink-0 rounded-full"
+                />
                 <span className="font-medium">{m.email}</span>
               </div>
 

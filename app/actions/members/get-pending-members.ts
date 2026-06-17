@@ -16,7 +16,10 @@ export async function getPendingMembers() {
     },
     select: {
       id: true,
+      image: true,
       email: true,
+      name: true,
+
       role: true,
       createdAt: true,
     },
