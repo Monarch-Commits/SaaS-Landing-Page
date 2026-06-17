@@ -1,10 +1,8 @@
-// app/(protected)/dashboard/layout.tsx
-
-import { syncUser } from '@/app/actions/user';
-import { redirect } from 'next/navigation';
-import { UserStatus } from '@prisma/client';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
+import { checkFirstLogin } from '../actions/owner/company';
+
+import { getCurrentUser, syncUser } from '../actions/user';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,26 +11,9 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await syncUser();
-
-  if (!user) {
-    redirect('/api/auth/login');
-  }
-
-  // ✅ PENDING — hindi pa approved
-  if (user.status === UserStatus.PENDING) {
-    redirect('/pending-approval');
-  }
-
-  // ✅ SUSPENDED
-  if (user.status === UserStatus.SUSPENDED) {
-    redirect('/suspended');
-  }
-
-  // ✅ Walang company
-  if (!user.companyId) {
-    redirect('/create-company');
-  }
+  await syncUser();
+  await checkFirstLogin();
+  const user = await getCurrentUser();
 
   return (
     <SidebarProvider>
