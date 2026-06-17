@@ -1,19 +1,24 @@
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
-import { checkFirstLogin } from '../actions/owner/company';
-import { checkAccessToDashboard } from '../actions/members/get-pending-members';
 import { syncUser } from '../actions/user';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
+// layout.tsx
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await syncUser();
-  await checkFirstLogin();
-  const user = await checkAccessToDashboard();
+  const user = await syncUser(); // ✅ 1 DB call — may company na included
+
+  if (!user) return null;
+
+  // ✅ checkFirstLogin logic dito na lang — no extra DB call
+  if (!user.companyId) {
+    redirect('/create-company');
+  }
 
   return (
     <SidebarProvider>

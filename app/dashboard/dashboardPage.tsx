@@ -18,8 +18,7 @@ import Chart from '@/components/Chart/ChartComponent';
 import RecentTasks from '@/components/dashboard/recent-tasks';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import CreateTaskDialog from '@/components/dashboard/dialog-create-task';
-import Link from 'next/link';
-import ButtonLink from '@/components/dashboard/button/link';
+import InviteForm from '@/components/dashboard/button/link';
 
 const stats = [
   { label: 'Total Tasks', value: '2,847', change: '+12.5%', icon: Activity },
@@ -208,7 +207,7 @@ function ManagerDashboardComponent({ companyName }: Props) {
                   Invite Team Member
                 </Link> */}
 
-                <ButtonLink companyId={companyName?.id || ''} />
+                <InviteForm />
 
                 <button className="bg-muted/50 hover:bg-muted w-full rounded-lg py-2.5 text-sm">
                   View Analytics

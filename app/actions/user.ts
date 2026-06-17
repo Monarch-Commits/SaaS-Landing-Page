@@ -11,7 +11,8 @@ export async function syncUser() {
   if (!user?.email) return null;
 
   const name =
-    [user.given_name, user.family_name].filter(Boolean).join(' ') || user.email;
+    [user.given_name, user.family_name].filter(Boolean).join(' ') ||
+    'Anonymous';
 
   const image = user.picture ?? null;
 
@@ -29,6 +30,7 @@ export async function syncUser() {
       name,
       image,
       lastLoginAt: new Date(),
+      // NOTE: role at status ay hindi ino-overwrite para mapreserve ang existing values
     },
   });
 
@@ -58,21 +60,15 @@ export async function getCurrentUser() {
 }
 
 export async function requireUser() {
-  const { getUser } = getKindeServerSession();
-  const kindeUser = await getUser();
+  const user = await getCurrentUser();
 
-  if (!kindeUser?.email) {
+  if (!user) {
     throw new Error('Unauthorized');
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { email: kindeUser.email },
-    include: { company: true },
-  });
-
-  if (!dbUser) {
-    throw new Error('User not found in DB');
+  if (user.status === UserStatus.SUSPENDED) {
+    throw new Error('Account suspended');
   }
 
-  return dbUser;
+  return user;
 }
