@@ -1,61 +1,23 @@
-// middleware.ts (root ng project)
+// middleware.ts
 
-import { withAuth } from '@kinde-oss/kinde-auth-nextjs/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ✅ Mga routes na hindi kailangan ng check
-  const publicRoutes = ['/api/auth', '/invite', '/pending-approval'];
+  const isProtected = pathname.startsWith('/dashboard');
+  const isPendingApproval = pathname.startsWith('/pending-approval');
 
-  const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
+  if (!isProtected && !isPendingApproval) {
+    return NextResponse.next();
+  }
 
-  if (isPublic) return NextResponse.next();
+  // ✅ Check lang kung naka-login sa Kinde — walang Prisma
+  const token = request.cookies.get('kinde_access_token')?.value;
 
-  // ✅ Kung nag-aaccess ng dashboard, check ang status
-  if (pathname.startsWith('/dashboard')) {
-    const kindeUser = request.cookies.get('kinde_user');
-
-    if (!kindeUser) {
-      return NextResponse.redirect(new URL('/api/auth/login', request.url));
-    }
-
-    try {
-      const email = JSON.parse(decodeURIComponent(kindeUser.value))?.email;
-
-      if (!email) {
-        return NextResponse.redirect(new URL('/api/auth/login', request.url));
-      }
-
-      const user = await prisma.user.findUnique({
-        where: { email },
-        select: { status: true, companyId: true },
-      });
-
-      // ✅ Walang user sa DB
-      if (!user) {
-        return NextResponse.redirect(new URL('/api/auth/login', request.url));
-      }
-
-      // ✅ PENDING — hindi pa approved
-      if (user.status === 'PENDING') {
-        return NextResponse.redirect(new URL('/pending-approval', request.url));
-      }
-
-      // ✅ SUSPENDED
-      if (user.status === 'SUSPENDED') {
-        return NextResponse.redirect(new URL('/suspended', request.url));
-      }
-
-      // ✅ Walang company
-      if (!user.companyId) {
-        return NextResponse.redirect(new URL('/create-company', request.url));
-      }
-    } catch {
-      return NextResponse.redirect(new URL('/api/auth/login', request.url));
-    }
+  if (!token && isProtected) {
+    return NextResponse.redirect(new URL('/api/auth/login', request.url));
   }
 
   return NextResponse.next();
